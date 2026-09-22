@@ -28,50 +28,50 @@
     <header>
       <p class="eyebrow">Innovator Journal · Unit 1 Summative</p>
       <h1>Distance Warning System</h1>
-      <p class="subtitle">Extending an ultrasonic-sensor and LED circuit with a piezo buzzer</p>
+      <p class="subtitle">Using an ultrasonic sensor and LED as a proximity warning</p>
     </header>
 
     <section>
       <h2>Goal and interest area</h2>
-      <p>I want to get more confident with analog input. I can follow guidance, but I still struggle to understand the basics independently. This project lets me practice a circuit that does more than one thing at once: it measures distance with an ultrasonic sensor, shows a visual warning with an LED, and adds a sound warning when an object is dangerously close.</p>
-      <p>A distance warning could help someone avoid bumping into an object, such as while parking a bicycle in a tight space or moving equipment near a wall.</p>
+      <p>I want to get better at analog input because I still struggle with it without guidance, including some of the basics. I chose this Arduino extension because it helps me practice building a circuit that does multiple things at one time. My current build measures distance with an ultrasonic sensor and uses an LED as a warning when something is too close.</p>
     </section>
 
     <section>
       <h2>New component and research</h2>
-      <p>My new component is a <strong>piezo buzzer</strong>, an output device that turns an Arduino signal into sound. I used Arduino's <a href="https://docs.arduino.cc/built-in-examples/">Built-in Examples</a> page to find tone examples and learn how to start and stop the sound.</p>
-      <p>The ultrasonic sensor is not an analog input: it measures the time for an echo pulse to return. My next iteration will add a photoresistor on A0, which will let me practice reading a real analog value and adapting the LED warning to the light level.</p>
+      <p>The new-to-me component in my build is an <strong>ultrasonic sensor</strong>. I used Arduino's <a href="https://docs.arduino.cc/built-in-examples/sensors/Ping/">Ping Ultrasonic Range Finder example</a> to learn how a trigger pulse and an echo pulse can be used to calculate distance.</p>
+      <p>I learned that an ultrasonic sensor is not an analog input: it measures how long an echo takes to come back. Since analog input is still an area I want to improve, a future version could add a photoresistor on A0. That would let me read a changing analog value and make the LED warning respond to the surrounding light level.</p>
     </section>
 
     <section>
-      <h2>Wiring plan</h2>
+      <h2>Current circuit and wiring</h2>
       <dl>
-        <dt>Ultrasonic sensor</dt><dd>VCC → 5V rail; GND → GND rail; TRIG → D9; ECHO → D10</dd>
-        <dt>LED</dt><dd>Anode → D6 through a 220 Ω resistor; cathode → GND rail</dd>
-        <dt>Piezo buzzer</dt><dd>Positive leg → D5; negative leg → GND rail</dd>
+        <dt>Ultrasonic sensor</dt><dd>VCC → 5V rail; GND → GND rail; TRIG and ECHO → the digital pins named in my code</dd>
+        <dt>LED</dt><dd>Arduino output pin → 220 Ω resistor → LED anode; LED cathode → GND rail</dd>
       </dl>
-      <p>All components need a common ground. The breadboard rails let components share the 5V and GND connections instead of each part needing its own Arduino power pin.</p>
+      <p>The parts share the breadboard's 5V and GND rails. This is useful when the Arduino's 5V pin is already in use because one power connection can feed the rail and the other components can connect to that rail. Every part still needs a shared ground.</p>
     </section>
 
     <section>
-      <h2>Prototype and collaboration</h2>
-      <p>My first ultrasonic-sensor setup kept printing the same distance numbers. Matthew Ma helped me troubleshoot the wiring. We checked that the trigger and echo pins were connected to the same pins named in the code and that the circuit had a shared ground. Checking one connection at a time helped me find the problem instead of guessing.</p>
-      <p>Matthew also showed me how to power the LED when the 5V pin was occupied: share the breadboard power and ground rails. I also helped Steven Shi troubleshoot his lightbulb and wiring by checking the LED direction, breadboard connection columns, and wire paths. Helping him made me use the same systematic checks on my own work.</p>
+      <h2>Prototype, troubleshooting, and peer support</h2>
+      <p>At first, my ultrasonic sensor kept spewing out the same numbers. Matthew Ma helped me troubleshoot the wiring. He helped me slow down and check the connections instead of assuming the sensor was broken. He also helped me figure out how to power the LED without trying to use the already occupied 5V pin: I could share the 5V and GND rails on the breadboard.</p>
+      <p>I also helped Steven Shi troubleshoot his lightbulb and wiring. I checked the LED direction and the breadboard connections with him. This showed me that helping someone else can improve my own understanding because I have to explain and check the basics carefully.</p>
     </section>
 
     <section>
-      <h2>Arduino code</h2>
+      <h2>Code</h2>
+      <p>This is the distance-warning logic I am using. Before my final submission, I will verify that the pin numbers and warning distance match my actual circuit.</p>
       <pre><code>const byte TRIG_PIN = 9;
 const byte ECHO_PIN = 10;
 const byte LED_PIN = 6;
-const byte BUZZER_PIN = 5;
 const float WARNING_CM = 25.0;
-const float DANGER_CM = 10.0;
 
 float readDistanceCm() {
-  digitalWrite(TRIG_PIN, LOW); delayMicroseconds(2);
-  digitalWrite(TRIG_PIN, HIGH); delayMicroseconds(10);
   digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
   unsigned long duration = pulseIn(ECHO_PIN, HIGH, 30000);
   if (duration == 0) return -1;
   return duration * 0.0343 / 2.0;
@@ -79,32 +79,33 @@ float readDistanceCm() {
 
 void setup() {
   Serial.begin(9600);
-  pinMode(TRIG_PIN, OUTPUT); pinMode(ECHO_PIN, INPUT);
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
   pinMode(LED_PIN, OUTPUT);
 }
 
 void loop() {
   float distance = readDistanceCm();
-  if (distance &gt; 0 &amp;&amp; distance &lt; DANGER_CM) {
-    digitalWrite(LED_PIN, HIGH); tone(BUZZER_PIN, 1600);
-  } else if (distance &gt; 0 &amp;&amp; distance &lt; WARNING_CM) {
-    digitalWrite(LED_PIN, HIGH); noTone(BUZZER_PIN);
-  } else {
-    digitalWrite(LED_PIN, LOW); noTone(BUZZER_PIN);
-  }
+  Serial.println(distance);
+  digitalWrite(LED_PIN, distance &gt; 0 &amp;&amp; distance &lt; WARNING_CM);
   delay(150);
 }</code></pre>
     </section>
 
     <section>
-      <h2>Evidence of my final build</h2>
-      <p class="note"><strong>Before submitting:</strong> I will add a photo or short video of my real circuit working, record the distance where the buzzer starts, and confirm that these pin numbers match my actual wiring.</p>
+      <h2>Future improvement</h2>
+      <p>A warning system like this could help someone who is getting too close to a wall or another object. The LED and ultrasonic sensor give a visual warning. To make it more useful, I would add a piezo buzzer that blares when the object is dangerously close, so the warning is easier to notice even if the user is not looking at the LED.</p>
     </section>
 
     <section>
       <h2>Reflection</h2>
-      <p>This system could help someone avoid an obstacle because the LED provides a visual warning and the buzzer can be heard even when the user is not looking at the circuit. To make it practical, I would test the distance thresholds, put it in a protective case, and make the sound pattern faster as an object gets closer.</p>
-      <p>The skill I would rely on most is debugging. A project can fail because of a loose wire, a wrong pin number, a missing shared ground, or code that does not match the circuit. I learned that I can make progress by checking one assumption at a time and using the Serial Monitor instead of guessing.</p>
+      <p>This project is useful for someone who is starting with Arduino because it shows that one circuit can do multiple things at the same time. Sharing the 5V and GND rails makes it possible to connect more components without needing a separate power pin for each one.</p>
+      <p>The skill I would rely on most if I kept developing this idea is debugging. Being able to troubleshoot is powerful because a problem might come from a loose wire, a wrong breadboard column, a missing shared ground, or code that does not match the circuit. I learned to check one thing at a time rather than guessing.</p>
+    </section>
+
+    <section>
+      <h2>Evidence</h2>
+      <p class="note"><strong>To add later:</strong> a photo or short video of my real circuit working, plus the measured distance where the LED turns on.</p>
     </section>
   </main>
 </body>

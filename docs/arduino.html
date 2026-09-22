@@ -36,14 +36,44 @@
 
     <section>
       <h2>Goal and interest area</h2>
-      <p>I want to get better at analog input because I still struggle with it without guidance, including some of the basics. I chose this Arduino extension because it helps me practice building a circuit that does multiple things at one time. My current build measures distance with an ultrasonic sensor and uses an LED as a warning when something is too close.</p>
+      <p>
+  One area I want to improve in is working with analog input and changing sensor values. I still struggle with some of the basics when I have to build and program an analog circuit without guidance. I chose this Arduino extension because I wanted more practice making a circuit where multiple components work together instead of only controlling one part at a time.
+</p>
+
+<p>
+  My current build measures the distance between an object and an ultrasonic sensor. It then uses an LED as a visual warning. When an object gets closer to the sensor, the LED becomes brighter. When the object gets farther away, the LED becomes dimmer until it eventually turns off.
+</p>
+
+<p>
+  Even though the ultrasonic sensor itself is not an analog input, this project still helped me understand how a changing sensor measurement can be converted into a changing output. The program takes the distance measurement and maps it to a brightness value for the LED. This is useful preparation for working with actual analog sensors in the future.
+</p>
+
     </section>
 
     <section>
       <h2>New component and research</h2>
-      <p>The new-to-me component in my build is an <strong>ultrasonic sensor</strong>. I used Arduino's <a href="https://docs.arduino.cc/built-in-examples/sensors/Ping/">Ping Ultrasonic Range Finder example</a> to learn how a trigger pulse and an echo pulse can be used to calculate distance.</p>
-      <p>An ultrasonic sensor is not an analog input: it measures how long an echo takes to come back. A future version could add a photoresistor on A0 so I can practice reading a changing analog value.</p>
-    </section>
+     <p>
+  The component that is new to me in my build is the ultrasonic sensor. Before this project, I had not worked with a sensor that measures distance. I used Arduino's
+  <a href="https://docs.arduino.cc/built-in-examples/sensors/Ping/">Ping Ultrasonic Range Finder example</a>
+  to understand the basic idea behind ultrasonic distance measurement.
+</p>
+
+<p>
+  The ultrasonic sensor works by sending out a very short sound pulse at a frequency that humans can't hear. The TRIG pin tells the sensor when to send this pulse. When the sound hits an object, it reflects back toward the sensor. The ECHO pin measures how long it takes for the reflected sound to return.
+</p>
+
+<p>
+  The Arduino can use this amount of time to calculate distance. Since the sound has to travel from the sensor to the object and then back to the sensor, the calculation divides the total distance traveled by two.
+</p>
+
+<p>
+  One important thing I learned is that an ultrasonic sensor is not an analog input. Instead of giving the Arduino a changing voltage through an analog pin like <code>A0</code>, it gives the Arduino a pulse whose length represents the distance. However, I can still use the distance as a changing value inside my program.
+</p>
+
+<p>
+  In a future version, I could add a photoresistor connected to <code>A0</code>. This would allow me to practice true analog input by using <code>analogRead()</code> to measure different light levels. I could then combine light level and distance so that the warning system reacts differently depending on the environment.
+</p>
+
 
     <section>
       <h2>Current circuit and wiring</h2>
@@ -51,19 +81,164 @@
         <dt>Ultrasonic sensor</dt><dd>VCC → 5V rail; GND → GND rail; TRIG → D3; ECHO → D2</dd>
         <dt>LED</dt><dd>D5 → 220 Ω resistor → LED anode; LED cathode → GND rail</dd>
       </dl>
-      <p>The parts share the breadboard's 5V and GND rails. This lets more than one component use the same power and ground connections, even when the Arduino's 5V pin is already in use.</p>
+<p> The VCC pin gives the ultrasonic sensor power, while GND completes the electrical circuit. The TRIG pin is connected to digital pin 3 because the Arduino needs to send a short signal to tell the sensor when to measure. The ECHO pin connects to digital pin 2 so that the Arduino can measure how long the returning pulse lasts. </p>
     </section>
+
+      
+<section>
+  <h2>Current Circuit and Wiring</h2>
+
+  <h3>Ultrasonic Sensor</h3>
+
+  <ul>
+    <li>VCC → 5V rail</li>
+    <li>GND → GND rail</li>
+    <li>TRIG → D3</li>
+    <li>ECHO → D2</li>
+  </ul>
+
+  <p>
+    The VCC pin gives the ultrasonic sensor power, while GND completes the electrical circuit. The TRIG pin is connected to digital pin 3 because the Arduino needs to send a short signal to tell the sensor when to measure. The ECHO pin connects to digital pin 2 so that the Arduino can measure how long the returning pulse lasts.
+  </p>
+
+  <h3>LED</h3>
+
+  <ul>
+    <li>D5 → 220 Ω resistor → LED anode</li>
+    <li>LED cathode → GND rail</li>
+  </ul>
+
+  <p>
+    Digital pin 5 is important because it is a PWM-capable pin. This allows me to use <code>analogWrite()</code> to control the apparent brightness of the LED instead of only turning it completely on or completely off.
+  </p>
+
+  <p>
+    The 220 Ω resistor protects the LED by limiting the amount of current flowing through it. Without the resistor, too much current could potentially damage the LED.
+  </p>
+
+  <p>
+    The parts share the breadboard's 5V and GND rails. This was an important part of my circuit because the Arduino only has a limited number of direct 5V and GND connections. By connecting the Arduino's 5V and GND to the breadboard rails, multiple components can use the same power and ground connections.
+  </p>
+
+  <p>
+    I learned that components in the same circuit also need to share a common ground so that their signals have the same electrical reference point.
+  </p>
+</section>
 
     <section>
       <h2>Prototype, troubleshooting, and peer support</h2>
-      <p>At first, my ultrasonic sensor kept spewing out the same numbers. Matthew Ma helped me troubleshoot the wiring. He also helped me figure out how to power the LED without trying to use the already occupied 5V pin: I could share the 5V and GND rails on the breadboard.</p>
-      <p>I also helped Steven Shi troubleshoot his lightbulb and wiring. Checking LED direction and breadboard connections with him helped me understand why checking the basics carefully matters.</p>
+      <p> One of the biggest parts of this project was troubleshooting. My circuit did not immediately work the way I wanted it to, so I had to check both my wiring and my code. </p>
+
+<p> At first, my ultrasonic sensor kept producing the same numbers instead of changing when I moved an object closer or farther away. This made me realize that even if the code looks correct, the circuit can still fail because of a wiring problem. </p>
+
+<p> Matthew Ma helped me troubleshoot the ultrasonic sensor wiring. We checked the power, ground, TRIG, and ECHO connections to make sure they matched the pins being used in the code. This helped me understand how closely the physical circuit and the program have to match. If the code says that TRIG is connected to D3 but the wire is actually connected somewhere else, the sensor will not work correctly. </p>
+
+<p> Matthew also helped me solve a problem when I wanted to add the LED. At first, I was unsure how I could power another part when the Arduino's 5V pin was already being used. I learned that I could connect the 5V and GND pins to the power rails on the breadboard. Then both the LED circuit and ultrasonic sensor could share those rails. This taught me more about how a breadboard distributes power. </p>
+
+<p> I also helped Steven Shi troubleshoot his lightbulb and wiring. We checked things such as LED direction, whether wires were placed in the correct breadboard rows, and whether the circuit had a complete path to ground. Helping someone else troubleshoot was useful because it forced me to explain what I was checking instead of only trying random changes. </p>
+
+<p> It showed me that some of the most common Arduino problems come from very small mistakes. </p>
     </section>
 
     <section>
-      <h2>The Process</h2>      <figure style="margin:20px 0;">        <img src="process-pic-1.jpg" alt="Ultrasonic sensor attached to the Arduino circuit" style="width:100%; border-radius:10px;">        <figcaption style="color:var(--muted); margin-top:8px;">the ultrasonic sensor attached</figcaption>      </figure>      <figure style="margin:20px 0;">        <img src="process-pic-2.jpg" alt="LED attached and powered on in the Arduino circuit" style="width:100%; border-radius:10px;">        <figcaption style="color:var(--muted); margin-top:8px;">LED attached and is successfully powered on</figcaption>      </figure>      <figure style="margin:20px 0;">        <video controls preload="metadata" style="width:100%; border-radius:10px;">          <source src="process-video.mp4" type="video/mp4">        </video>        <figcaption style="color:var(--muted); margin-top:8px;">sensor and LED are working together but not the way I intended nor properly</figcaption>      </figure>    </section>    <section>      <h2>Arduino code</h2>
-      <p>This sketch makes the LED brighter when an object is closer and turns it off at 30 cm or farther.</p>
-      <pre><code>// Pin definitions
+  <h2>The Process</h2>
+
+  <h3>Stage 1: Connecting and Testing the Ultrasonic Sensor</h3>
+
+  <figure style="margin:20px 0;">
+    <img 
+      src="process-pic-1.jpg" 
+      alt="Ultrasonic sensor attached to the Arduino circuit" 
+      style="width:100%; border-radius:10px;"
+    >
+    <figcaption style="color:var(--muted); margin-top:8px;">
+      The ultrasonic sensor attached to the Arduino circuit.
+    </figcaption>
+  </figure>
+
+  <p>
+    The first major step was attaching the ultrasonic sensor to the Arduino and breadboard. I connected VCC and GND first so the sensor could receive power. I then connected TRIG and ECHO to the digital pins that matched my program.
+  </p>
+
+  <p>
+    At this point, my main goal was not to control the LED yet. I first wanted to confirm that the ultrasonic sensor could successfully measure distance on its own. I used the Serial Monitor to look at the distance values being produced by the Arduino.
+  </p>
+
+  <p>
+    This stage was important because testing one part at a time made troubleshooting easier. If I had connected every component immediately, I would not have known whether a problem was coming from the ultrasonic sensor, LED, wiring, or code.
+  </p>
+
+  <p>
+    At first, the sensor kept giving similar or incorrect readings. I checked the connections and made sure the TRIG and ECHO pins matched the numbers written in my code. After troubleshooting the circuit, the distance readings began changing when I moved objects toward and away from the sensor.
+  </p>
+
+  <h3>Stage 2: Adding the LED</h3>
+
+  <figure style="margin:20px 0;">
+    <img 
+      src="process-pic-2.jpg" 
+      alt="LED attached and powered on in the Arduino circuit" 
+      style="width:100%; border-radius:10px;"
+    >
+    <figcaption style="color:var(--muted); margin-top:8px;">
+      The LED attached to the circuit and successfully powered on.
+    </figcaption>
+  </figure>
+
+  <p>
+    After I got the sensor working, I added the LED to the circuit. The LED was connected to digital pin 5 through a 220 Ω resistor, with the other side connected to ground.
+  </p>
+
+  <p>
+    The resistor was necessary because an LED should not be connected directly between an Arduino output pin and ground without current limiting. I also had to make sure the LED was facing the correct direction because LEDs are polarized components.
+  </p>
+
+  <p>
+    One problem I had during this stage was figuring out how to power multiple parts when some of the Arduino's power connections were already being used. This is where I learned to use the breadboard's 5V and GND rails as shared connections.
+  </p>
+
+  <p>
+    Once the LED successfully powered on, I knew that the LED part of the circuit was functioning. The next challenge was making the LED respond correctly to information from the ultrasonic sensor.
+  </p>
+
+  <h3>Stage 3: Combining the Sensor and LED</h3>
+
+  <figure style="margin:20px 0;">
+    <video controls preload="metadata" style="width:100%; border-radius:10px;">
+      <source src="process-video.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <figcaption style="color:var(--muted); margin-top:8px;">
+      The ultrasonic sensor and LED working together, but not yet responding the way I intended.
+    </figcaption>
+  </figure>
+
+  <p>
+    After testing both components individually, I combined them in the same program. The ultrasonic sensor measured distance, and the Arduino used that distance to determine how bright the LED should be.
+  </p>
+
+  <p>
+    At first, the sensor and LED were technically working together, but they were not working the way I intended. The LED response was not always consistent with the distance I expected. This showed me the difference between a circuit simply "working" and a circuit working correctly according to my goal.
+  </p>
+
+  <p>
+    I had to look at the readings in the Serial Monitor while also watching the LED. This allowed me to compare the actual distance measurement with the brightness value being sent to the LED.
+  </p>
+
+  <p>
+    I eventually changed the useful distance range to about 2–30 cm. Anything close to 2 cm should cause the LED to reach full brightness, while an object around 30 cm away should cause the LED to turn off. Values in between those distances create different brightness levels. </p>
+
+<p> This stage helped me understand why testing and revising are such important parts of building an Arduino project. The first version does not have to work perfectly. Each test gives me information that I can use to improve the next version. </p> </section>
+    <section>
+
+      <section>
+  <h2>Arduino Code</h2>
+
+  <p>
+    This sketch makes the LED brighter as an object gets closer to the ultrasonic sensor. At approximately 2 cm or closer, the LED reaches maximum brightness. As the object moves farther away, the LED gradually becomes dimmer. At 30 cm or farther, it turns off.
+  </p>
+
+  <pre><code>// Pin definitions
 const int trigPin = 3;
 const int echoPin = 2;
 const int ledPin = 5; // Must be a PWM pin (labeled with ~)
@@ -112,22 +287,337 @@ void loop() {
 
   delay(100); // Short delay for stable readings
 }</code></pre>
-    </section>
+
+</section>
+      
+<section>
+  <h2>How the Code Works Step by Step</h2>
+
+  <h3>1. Defining the Pins</h3>
+
+  <pre><code>const int trigPin = 3;
+const int echoPin = 2;
+const int ledPin = 5;</code></pre>
+
+  <p>
+    These lines tell the Arduino which physical pins each component is connected to. <code>trigPin</code> is connected to pin 3, <code>echoPin</code> is connected to pin 2, and the LED is connected to pin 5.
+  </p>
+
+  <p>
+    Pin 5 is a PWM pin, which is important because I want the LED to have different brightness levels instead of only being on or off.
+  </p>
+
+  <p>
+    Using variables for the pin numbers also makes the program easier to change. For example, if I moved the LED from pin 5 to another PWM pin, I would only need to change the value at the top of the program.
+  </p>
+
+  <h3>2. Setting the Distance Range</h3>
+
+  <pre><code>const int minDistance = 2;
+const int maxDistance = 30;</code></pre>
+
+  <p>
+    These values establish the range where the LED changes brightness.
+  </p>
+
+  <p>
+    At 2 cm or closer, I want the LED to be fully bright. At 30 cm or farther, I want the LED to be off.
+  </p>
+
+  <p>
+    This means that the most noticeable warning happens when an object gets very close to the sensor.
+  </p>
+
+  <h3>3. Setting Up the Serial Monitor and Pin Modes</h3>
+
+  <pre><code>void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}</code></pre>
+
+  <p>
+    The <code>setup()</code> function runs once when the Arduino starts.
+  </p>
+
+  <p>
+    <code>Serial.begin(9600);</code> starts communication between the Arduino and the computer. This allows me to see information such as distance and LED brightness in the Serial Monitor.
+  </p>
+
+  <p>
+    The <code>pinMode()</code> commands tell the Arduino how each pin will be used.
+  </p>
+
+  <p>
+    The TRIG pin is an <code>OUTPUT</code> because the Arduino sends a signal from that pin to the ultrasonic sensor.
+  </p>
+
+  <p>
+    The ECHO pin is an <code>INPUT</code> because the Arduino receives the returning signal through that pin.
+  </p>
+
+  <p>
+    The LED pin is an <code>OUTPUT</code> because the Arduino sends a PWM signal to control the LED.
+  </p>
+
+  <h3>4. Making Sure TRIG Starts LOW</h3>
+
+  <pre><code>digitalWrite(trigPin, LOW);
+delayMicroseconds(2);</code></pre>
+
+  <p>
+    Before starting a new measurement, the program makes sure the TRIG pin is LOW for 2 microseconds.
+  </p>
+
+  <p>
+    This gives the sensor a clean starting point before the trigger pulse is sent.
+  </p>
+
+  <h3>5. Sending the Ultrasonic Trigger Pulse</h3>
+
+  <pre><code>digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);</code></pre>
+
+  <p>
+    The Arduino raises the TRIG pin to HIGH for 10 microseconds and then changes it back to LOW.
+  </p>
+
+  <p>
+    This short pulse tells the ultrasonic sensor to send out an ultrasonic sound wave.
+  </p>
+
+  <h3>6. Measuring the Returning Echo</h3>
+
+  <pre><code>long duration = pulseIn(echoPin, HIGH, 30000);</code></pre>
+
+  <p>
+    The <code>pulseIn()</code> function measures how long the ECHO pin stays HIGH.
+  </p>
+
+  <p>
+    That amount of time represents how long the ultrasonic sound took to travel to an object and return.
+  </p>
+
+  <p>
+    The <code>30000</code> gives the command a timeout of 30,000 microseconds. This prevents the Arduino from getting stuck waiting forever if no echo is detected.
+  </p>
+
+  <h3>7. Converting Time Into Distance</h3>
+
+  <pre><code>int distance = duration * 0.034 / 2;</code></pre>
+
+  <p>
+    This line converts the echo time into centimeters.
+  </p>
+
+  <p>
+    Sound travels at approximately <strong>0.034 centimeters per microsecond</strong>, so multiplying <code>duration</code> by <code>0.034</code> gives the approximate total distance traveled by the sound.
+  </p>
+
+  <p>
+    The result is divided by two because the sound travels two directions: first from the sensor to the object and then from the object back to the sensor.
+  </p>
+
+  <p>
+    For example, if the total sound travel distance was 40 cm, the actual object would be approximately 20 cm away.
+  </p>
+
+  <h3>8. Keeping the Distance Inside the Useful Range</h3>
+
+  <pre><code>int clampedDistance = constrain(distance, minDistance, maxDistance);</code></pre>
+
+  <p>
+    The <code>constrain()</code> function prevents values from going outside my chosen 2–30 cm range.
+  </p>
+
+  <p>
+    If the sensor reads 1 cm, the program treats it as 2 cm.
+  </p>
+
+  <p>
+    If the sensor reads 50 cm, the program treats it as 30 cm.
+  </p>
+
+  <p>
+    This is useful because I only want the LED brightness to change inside this range.
+  </p>
+
+  <h3>9. Converting Distance Into Brightness</h3>
+
+  <pre><code>int brightness = map(clampedDistance, minDistance, maxDistance, 255, 0);</code></pre>
+
+  <p>
+    The <code>map()</code> function converts one range of numbers into another range.
+  </p>
+
+  <p>
+    My distance range is:
+  </p>
+
+  <p>
+    <strong>2 cm → 30 cm</strong>
+  </p>
+
+  <p>
+    The LED brightness range is:
+  </p>
+
+  <p>
+    <strong>255 → 0</strong>
+  </p>
+
+  <p>
+    A PWM value of 255 means maximum brightness, while 0 means the LED is off.
+  </p>
+
+  <p>
+    The ranges are reversed because I want a smaller distance to create a brighter LED.
+  </p>
+
+  <p>
+    For example:
+  </p>
+
+  <ul>
+    <li>Very close object → brightness near 255</li>
+    <li>Medium-distance object → medium brightness</li>
+    <li>Farther object → brightness near 0</li>
+  </ul>
+
+  <h3>10. Sending the Brightness Value to the LED</h3>
+
+  <pre><code>analogWrite(ledPin, brightness);</code></pre>
+
+  <p>
+    This sends the calculated brightness value to the LED using PWM.
+  </p>
+
+  <p>
+    Even though the command is called <code>analogWrite()</code>, the Arduino is not actually creating a true analog voltage on pin 5. Instead, it rapidly switches the pin on and off. Changing the amount of time the signal stays on makes the LED appear brighter or dimmer.
+  </p>
+
+  <h3>11. Printing Information to the Serial Monitor</h3>
+
+  <pre><code>Serial.print("Distance: ");
+Serial.print(distance);
+Serial.print(" cm | Brightness: ");
+Serial.println(brightness);</code></pre>
+
+  <p>
+    These lines display both the measured distance and calculated brightness.
+  </p>
+
+  <p>
+    For example, the Serial Monitor might display:
+  </p>
+
+  <pre><code>Distance: 12 cm | Brightness: 163</code></pre>
+
+  <p>
+    This was especially useful when troubleshooting because I could compare what the program thought was happening with what I actually saw the LED doing.
+  </p>
+
+  <h3>12. Adding a Short Delay</h3>
+
+  <pre><code>delay(100);</code></pre>
+
+  <p>
+    Finally, the program waits 100 milliseconds before taking another measurement.
+  </p>
+
+  <p>
+    Without a short delay, measurements could happen extremely quickly and make the Serial Monitor harder to read. The delay also helps make the readings and LED response more stable.
+  </p>
+
+  <p>
+    After the delay, the <code>loop()</code> function starts again and repeats the entire process.
+  </p>
+</section>
+
+      <section>
+  <h2>Skills I Developed</h2>
+
+  <p>
+    Throughout this project, I developed several skills that I can use in future Arduino projects.
+  </p>
+
+  <p>
+    One major skill was <strong>circuit building</strong>. I became more comfortable using a breadboard, connecting components to power and ground rails, and understanding how multiple components can share the same power supply.
+  </p>
+
+  <p>
+    I also improved my understanding of <strong>Arduino inputs and outputs</strong>. The ultrasonic sensor taught me that not every sensor works through <code>analogRead()</code>. Different sensors can communicate with the Arduino in different ways. In this case, the Arduino measures the length of the ECHO pulse to determine distance.
+  </p>
+
+  <p>
+    Another skill I practiced was <strong>PWM output</strong>. Before this project, I mainly thought about LEDs as being either on or off. Using <code>analogWrite()</code> showed me how the Arduino can make an LED appear to have many different brightness levels.
+  </p>
+
+  <p>
+    The skill I improved the most was <strong>debugging</strong>. When something did not work, I learned not to immediately assume that the entire project was broken. Instead, I could test individual parts. I could check whether the sensor was producing values, check whether the LED worked by itself, check the breadboard connections, and compare my wiring to the pin numbers in my code.
+  </p>
+
+  <p>
+    I also developed <strong>collaboration and communication skills</strong>. Matthew helped me solve problems with my own circuit, and I helped Steven troubleshoot his circuit. Both experiences showed me that asking another person to look at a problem can reveal something I missed. Helping someone else also strengthened my own understanding because I had to think about why the circuit worked instead of only copying the correct wiring.
+  </p>
+
+  <p>
+    Finally, I feel more confident <strong>with Arduino</strong>. I still needed help during parts of the project, but I now understand more about how to approach a circuit when it does not work. Instead of immediately asking someone for the answer, I can check power, ground, component direction, pin numbers, Serial Monitor values, and the code one step at a time.
+  </p>
+</section>
+
+      <section>
+  <h2>Future Improvement</h2>
+
+  <p>
+    A warning system like this could be useful for someone who is getting too close to a wall, another object, or an obstacle. The ultrasonic sensor can detect the distance while the LED provides a visual warning that becomes more noticeable as the object gets closer.
+  </p>
+
+  <p>
+    One improvement I would make is adding a <strong>piezo buzzer</strong>. The LED would continue acting as the visual warning, while the buzzer could provide an audio warning when something becomes dangerously close. I could also make the buzzer beep faster as the distance decreases.
+  </p>
+
+  <p>
+    Another improvement would be adding a <strong>photoresistor connected to A0</strong>. This would allow me to practice the analog input skills that I originally wanted to improve. For example, the Arduino could measure the amount of light in the room and automatically make the warning LED brighter in bright conditions or dimmer in dark conditions.
+  </p>
+
+  <p>
+    Eventually, I could combine the ultrasonic sensor, LED, buzzer, and photoresistor into one system. That would give me even more practice making several inputs and outputs work together.
+  </p>
+</section>
+      
 
     <section>
-      <h2>Future improvement</h2>
-      <p>A warning system like this could help someone who is getting too close to a wall or another object. The LED and ultrasonic sensor give a visual warning. To make it more useful, I would add a piezo buzzer that blares when the object is dangerously close.</p>
-    </section>
+  <h2>Reflection</h2>
 
-    <section>
-      <h2>Reflection</h2>
-      <p>This project is useful for someone starting with Arduino because it shows that one circuit can do multiple things at the same time. The skill I would rely on most if I kept developing it is debugging: a problem can come from a loose wire, a wrong breadboard column, a missing shared ground, or code that does not match the circuit.</p>
-    </section>
+  <p>
+    This project helped me understand that building an Arduino project is more than connecting components and copying code. The circuit and the program have to work together. A small error in either one can cause the entire system to behave differently than expected.
+  </p>
 
-    <section>
-      <h2>Evidence</h2>
-      <video controls preload="metadata" style="width:100%; border-radius:10px;">        <source src="final video.mp4" type="video/mp4">      </video>
-    </section>
+  <p>
+    One of the biggest things I learned was how important it is to break a problem into smaller parts. When the complete system was not working correctly, I could test the ultrasonic sensor by itself, test the LED separately, check the wiring, and use the Serial Monitor to see what the Arduino was actually calculating.
+  </p>
+
+  <p>
+    I also learned that troubleshooting is not separate from building the project. Troubleshooting is part of the process. Problems such as a loose wire, a wire placed in the wrong breadboard column, an LED facing the wrong direction, a missing shared ground, or code using the wrong pin number can all stop a circuit from working.
+  </p>
+
+  <p>
+    The skill I would rely on most if I continued developing this project is debugging. I now have a better process for finding problems instead of randomly changing parts of the circuit.
+  </p>
+
+  <p>
+    This project also helped me become more comfortable combining multiple components. At the beginning, I was unsure about things such as sharing the 5V and GND rails. By the end, I had a sensor measuring distance, code processing that measurement, and an LED responding with a changing brightness.
+  </p>
+
+  <p>
+    Although this project did not use a true analog input yet, it gave me a stronger foundation for my next project. I now understand more about changing sensor values, PWM output, circuit wiring, debugging, and how different parts of a program connect together. My next step would be adding a true analog sensor so I can continue working toward my original goal of becoming more independent with analog input.
+  </p>
+</section>
+
+
   </main>
 </body>
 </html>

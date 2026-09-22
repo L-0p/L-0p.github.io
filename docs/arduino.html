@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arduino Distance Warning | Leo Fan</title>
+  <style>
+    :root { --ink:#102a43; --muted:#486581; --paper:#f7fafc; --card:#fff; --accent:#d1495b; --line:#d9e2ec; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:17px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { max-width:920px; margin:auto; padding:56px 24px 72px; }
+    header { border-left:7px solid var(--accent); padding:6px 0 6px 22px; margin-bottom:34px; }
+    h1 { font-size:clamp(2rem,6vw,3.6rem); line-height:1.08; margin:0; letter-spacing:-.04em; }
+    h2 { margin:0 0 12px; font-size:1.35rem; }
+    .eyebrow { color:var(--accent); font-weight:750; letter-spacing:.08em; text-transform:uppercase; font-size:.8rem; margin:0 0 8px; }
+    .subtitle { color:var(--muted); margin:12px 0 0; }
+    section { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:26px; margin:18px 0; box-shadow:0 4px 14px #102a4308; }
+    p { margin:0 0 13px; } p:last-child { margin-bottom:0; }
+    dl { display:grid; grid-template-columns:max-content 1fr; gap:7px 18px; margin:0; }
+    dt { font-weight:700; } dd { margin:0; }
+    a { color:#0967a7; }
+    pre { overflow:auto; background:#102a43; color:#f0f4f8; padding:20px; border-radius:10px; font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace; }
+    .note { background:#fff8e1; border-left:4px solid #f0b429; padding:15px 17px; border-radius:0 8px 8px 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Innovator Journal · Unit 1 Summative</p>
+      <h1>Distance Warning System</h1>
+      <p class="subtitle">Extending an ultrasonic-sensor and LED circuit with a piezo buzzer</p>
+    </header>
+
+    <section>
+      <h2>Goal and interest area</h2>
+      <p>I want to get more confident with analog input. I can follow guidance, but I still struggle to understand the basics independently. This project lets me practice a circuit that does more than one thing at once: it measures distance with an ultrasonic sensor, shows a visual warning with an LED, and adds a sound warning when an object is dangerously close.</p>
+      <p>A distance warning could help someone avoid bumping into an object, such as while parking a bicycle in a tight space or moving equipment near a wall.</p>
+    </section>
+
+    <section>
+      <h2>New component and research</h2>
+      <p>My new component is a <strong>piezo buzzer</strong>, an output device that turns an Arduino signal into sound. I used Arduino's <a href="https://docs.arduino.cc/built-in-examples/">Built-in Examples</a> page to find tone examples and learn how to start and stop the sound.</p>
+      <p>The ultrasonic sensor is not an analog input: it measures the time for an echo pulse to return. My next iteration will add a photoresistor on A0, which will let me practice reading a real analog value and adapting the LED warning to the light level.</p>
+    </section>
+
+    <section>
+      <h2>Wiring plan</h2>
+      <dl>
+        <dt>Ultrasonic sensor</dt><dd>VCC → 5V rail; GND → GND rail; TRIG → D9; ECHO → D10</dd>
+        <dt>LED</dt><dd>Anode → D6 through a 220 Ω resistor; cathode → GND rail</dd>
+        <dt>Piezo buzzer</dt><dd>Positive leg → D5; negative leg → GND rail</dd>
+      </dl>
+      <p>All components need a common ground. The breadboard rails let components share the 5V and GND connections instead of each part needing its own Arduino power pin.</p>
+    </section>
+
+    <section>
+      <h2>Prototype and collaboration</h2>
+      <p>My first ultrasonic-sensor setup kept printing the same distance numbers. Matthew Ma helped me troubleshoot the wiring. We checked that the trigger and echo pins were connected to the same pins named in the code and that the circuit had a shared ground. Checking one connection at a time helped me find the problem instead of guessing.</p>
+      <p>Matthew also showed me how to power the LED when the 5V pin was occupied: share the breadboard power and ground rails. I also helped Steven Shi troubleshoot his lightbulb and wiring by checking the LED direction, breadboard connection columns, and wire paths. Helping him made me use the same systematic checks on my own work.</p>
+    </section>
+
+    <section>
+      <h2>Arduino code</h2>
+      <pre><code>const byte TRIG_PIN = 9;
+const byte ECHO_PIN = 10;
+const byte LED_PIN = 6;
+const byte BUZZER_PIN = 5;
+const float WARNING_CM = 25.0;
+const float DANGER_CM = 10.0;
+
+float readDistanceCm() {
+  digitalWrite(TRIG_PIN, LOW); delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH); delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  unsigned long duration = pulseIn(ECHO_PIN, HIGH, 30000);
+  if (duration == 0) return -1;
+  return duration * 0.0343 / 2.0;
+}
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(TRIG_PIN, OUTPUT); pinMode(ECHO_PIN, INPUT);
+  pinMode(LED_PIN, OUTPUT);
+}
+
+void loop() {
+  float distance = readDistanceCm();
+  if (distance &gt; 0 &amp;&amp; distance &lt; DANGER_CM) {
+    digitalWrite(LED_PIN, HIGH); tone(BUZZER_PIN, 1600);
+  } else if (distance &gt; 0 &amp;&amp; distance &lt; WARNING_CM) {
+    digitalWrite(LED_PIN, HIGH); noTone(BUZZER_PIN);
+  } else {
+    digitalWrite(LED_PIN, LOW); noTone(BUZZER_PIN);
+  }
+  delay(150);
+}</code></pre>
+    </section>
+
+    <section>
+      <h2>Evidence of my final build</h2>
+      <p class="note"><strong>Before submitting:</strong> I will add a photo or short video of my real circuit working, record the distance where the buzzer starts, and confirm that these pin numbers match my actual wiring.</p>
+    </section>
+
+    <section>
+      <h2>Reflection</h2>
+      <p>This system could help someone avoid an obstacle because the LED provides a visual warning and the buzzer can be heard even when the user is not looking at the circuit. To make it practical, I would test the distance thresholds, put it in a protective case, and make the sound pattern faster as an object gets closer.</p>
+      <p>The skill I would rely on most is debugging. A project can fail because of a loose wire, a wrong pin number, a missing shared ground, or code that does not match the circuit. I learned that I can make progress by checking one assumption at a time and using the Serial Monitor instead of guessing.</p>
+    </section>
+  </main>
+</body>
+</html>

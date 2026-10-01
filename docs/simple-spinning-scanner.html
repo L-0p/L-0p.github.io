@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Simple Spinning Scanner</title>
+
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #181b21;
+      --text: #f3f4f6;
+      --muted: #a7adb8;
+      --accent: #6ea8fe;
+      --line: #303640;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.7;
+    }
+
+    main {
+      width: min(900px, 90%);
+      margin: auto;
+      padding: 50px 0 80px;
+    }
+
+    header {
+      margin-bottom: 55px;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      margin-bottom: 10px;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.15rem;
+      max-width: 700px;
+    }
+
+    .progress-label {
+      color: var(--accent);
+      font-weight: bold;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+    }
+
+    .timeline {
+      position: relative;
+      margin-left: 14px;
+      padding-left: 38px;
+      border-left: 3px solid var(--line);
+    }
+
+    .stage {
+      position: relative;
+      margin-bottom: 70px;
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      left: -49px;
+      top: 5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 4px solid var(--bg);
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+
+    h3 {
+      margin-top: 30px;
+      font-size: 1.3rem;
+    }
+
+    p {
+      margin: 0 0 18px;
+    }
+
+    .note {
+      background: var(--card);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 18px 20px;
+      margin: 25px 0;
+    }
+
+    figure {
+      margin: 28px 0;
+    }
+
+    figure img {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+    }
+
+    figcaption {
+      color: var(--muted);
+      margin-top: 8px;
+      font-size: 0.95rem;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 25px 0;
+    }
+
+    .comparison div {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .comparison h3 {
+      margin-top: 0;
+    }
+
+    .next-step {
+      background: var(--card);
+      padding: 25px;
+      border-radius: 12px;
+      margin-top: 25px;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    @media (max-width: 650px) {
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline {
+        padding-left: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<main>
+
+  <header>
+    <p class="progress-label">Innovator Journal</p>
+
+    <h1>Simple Spinning Scanner</h1>
+
+    <p class="subtitle">
+      Building a minimum testable prototype for a future 3D scanner,
+      beginning with an ultrasonic sensor and servo and progressing
+      toward more precise rotation with a stepper motor.
+    </p>
+  </header>
+
+
+  <div class="timeline">
+
+
+    <!-- STAGE 1 -->
+    <section class="stage">
+
+      <p class="progress-label">Stage 1 — The Idea</p>
+
+      <h2>Starting With the Museum's 3D Scanner</h2>
+
+      <p>
+        This project started after seeing a professional 3D scanner at the museum.
+        The scanner we saw was much more advanced than anything we could realistically
+        build right now. It could capture the shape of an object and turn those
+        measurements into a detailed digital 3D model.
+      </p>
+
+      <p>
+        Instead of trying to copy the entire museum scanner at once, our goal is to
+        work toward it through smaller prototypes. The comparison we used was that
+        the museum scanner is like a sports car, while our first scanner is more like
+        a skateboard. The simpler version does not need every feature of a professional
+        scanner. It only needs to test one important idea successfully.
+      </p>
+
+      <div class="note">
+        <strong>Minimum testable prototype:</strong>
+        My first goal is to rotate a distance sensor through different angles and
+        collect measurements. If the sensor knows both its angle and the distance
+        to an object, those measurements can eventually be used to describe the
+        object's surroundings in two dimensions.
+      </div>
+
+      <p>
+        The museum scanner uses much more advanced methods involving projected light,
+        cameras, calibration, and software. Our scanner simplifies the same general
+        problem by focusing first on controlled movement and distance sensing.
+      </p>
+
+    </section>
+
+
+    <!-- STAGE 2 -->
+    <section class="stage">
+
+      <p class="progress-label">Stage 2 — First Prototype</p>
+
+      <h2>Beginning With a Servo Motor</h2>
+
+      <p>
+        My first version used a servo motor with an ultrasonic sensor. I had already
+        worked with the ultrasonic sensor before, so this let me build on something
+        familiar while introducing movement into the system.
+      </p>
+
+      <figure>
+        <img src="first_1.jpg"
+             alt="Arduino scanner prototype using an ultrasonic sensor and servo motor">
+
+        <figcaption>
+          Early servo prototype with the ultrasonic sensor, servo, Arduino, and breadboard connected.
+        </figcaption>
+      </figure>
+
+      <p>
+        The servo's job is to change the direction that the ultrasonic sensor is
+        facing. Instead of measuring only what is directly in front of it, the
+        sensor can rotate to different angles and take a distance measurement at
+        each position.
+      </p>
+
+      <p>
+        This is an important step toward a scanner because a scanner needs more than
+        one measurement. If the sensor stays still, it only gives one distance in
+        one direction. Rotating the sensor lets it begin collecting information
+        from multiple directions.
+      </p>
+
+      <figure>
+        <img src="first.jpg"
+             alt="Another view of the servo and ultrasonic sensor scanner prototype">
+
+        <figcaption>
+          Another view of the servo stage. The ultrasonic sensor is connected with the servo so that its direction can change.
+        </figcaption>
+      </figure>
+
+      <h3>What I learned from the servo</h3>
+
+      <p>
+        The servo was useful because it made the idea of a spinning scanner much
+        easier to understand. I could think of each position as an angle. The Arduino
+        could move the sensor to an angle, take a distance measurement, move again,
+        and repeat the process.
+      </p>
+
+      <p>
+        This helped me understand that the scanner is really combining two pieces
+        of information: <strong>where the sensor is pointing</strong> and
+        <strong>how far away the object is</strong>.
+      </p>
+
+    </section>
+
+
+    <!-- STAGE 3 -->
+    <section class="stage">
+
+      <p class="progress-label">Stage 3 — Changing the Design</p>
+
+      <h2>Moving From a Servo to a Stepper Motor</h2>
+
+      <p>
+        After experimenting with the servo, the next step was switching to a
+        stepper motor. Both motors create movement, but they are controlled in
+        different ways.
+      </p>
+
+      <div class="comparison">
+
+        <div>
+          <h3>Servo Motor</h3>
+
+          <p>
+            A servo is useful when I want to tell the motor to move to a particular
+            angle. This made it a good starting point because controlling its
+            position was relatively simple.
+          </p>
+        </div>
+
+        <div>
+          <h3>Stepper Motor</h3>
+
+          <p>
+            A stepper motor moves in small individual steps. By controlling how
+            many steps the motor takes, I can control its rotation in smaller and
+            more repeatable increments.
+          </p>
+        </div>
+
+      </div>
+
+      <p>
+        For a scanner, that extra control is useful because I eventually want the
+        program to know exactly how much the sensor rotates between measurements.
+        The more predictable the movement is, the easier it becomes to match a
+        distance measurement with a position.
+      </p>
+
+    </section>
+
+
+    <!-- STAGE 4 -->
+    <section class="stage">
+
+      <p class="progress-label">Stage 4 — Current Progress</p>
+
+      <h2>Building the Stepper Motor Circuit</h2>
+
+      <p>
+        Switching to the stepper motor also made the circuit more complicated.
+        Unlike the small servo setup, the stepper motor needs additional hardware
+        to control the current going to its coils. This meant adding a motor-driver
+        board and making more connections between the Arduino, breadboard, motor,
+        and power.
+      </p>
+
+      <figure>
+        <img src="first_2.jpg"
+             alt="Work in progress Arduino stepper motor circuit">
+
+        <figcaption>
+          Early work on the stepper motor version. The Arduino, motor driver, breadboard, and stepper motor are being connected.
+        </figcaption>
+      </figure>
+
+      <p>
+        At this stage, the build was still a work in progress. There were more wires
+        to keep track of than in the servo version, so understanding which connections
+        controlled the motor and which supplied power became especially important.
+      </p>
+
+      <p>
+        This part of the project showed me that improving one part of a design can
+        also introduce new problems. The stepper motor gives me more control over
+        rotation, but it requires a more complicated circuit.
+      </p>
+
+      <figure>
+        <img src="first_3.jpg"
+             alt="Stepper motor and motor driver connected to Arduino">
+
+        <figcaption>
+          A later view of the stepper motor setup with the motor driver connected on the breadboard.
+        </figcaption>
+      </figure>
+
+      <p>
+        I am currently working toward getting the stepper motor to rotate reliably
+        through controlled steps. Once that works consistently, the next challenge
+        will be combining that movement with the distance sensor so that every
+        measurement can be connected to a specific angle.
+      </p>
+
+    </section>
+
+
+    <!-- STAGE 5 -->
+    <section class="stage">
+
+      <p class="progress-label">Stage 5 — What I'm Learning</p>
+
+      <h2>From Movement to Scanning</h2>
+
+      <p>
+        One of the biggest things I have learned so far is that making something
+        spin is not the same as making a scanner. The movement has to be controlled,
+        and the measurements have to be connected to that movement.
+      </p>
+
+      <p>
+        For example, if I know that the sensor is pointing at 30 degrees and reads
+        an object 20 cm away, that information is much more useful than simply
+        knowing that an object is 20 cm away. Repeating that process at many angles
+        begins to create a map around the sensor.
+      </p>
+
+      <p>
+        I have also developed more experience with troubleshooting circuits.
+        Moving from the servo to the stepper motor introduced more wiring and
+        another component between the Arduino and the motor. I have had to pay
+        closer attention to power, ground, the motor connections, and how the
+        physical circuit matches the program.
+      </p>
+
+    </section>
+
+
+    <!-- STAGE 6 -->
+    <section class="stage">
+
+      <p class="progress-label">Stage 6 — Next Steps</p>
+
+      <h2>Where the Scanner Goes From Here</h2>
+
+      <p>
+        The current goal is still a simple spinning 2D scanner. I first need the
+        stepper motor to move reliably and then need to connect the ultrasonic
+        sensor so that it takes measurements as the motor rotates.
+      </p>
+
+      <div class="next-step">
+
+        <strong>My next goals are:</strong>
+
+        <ul>
+          <li>Get the stepper motor rotating consistently.</li>
+          <li>Control how many steps it moves between measurements.</li>
+          <li>Attach or position the ultrasonic sensor so it rotates with the scanner.</li>
+          <li>Record both angle and distance for each measurement.</li>
+          <li>Use those measurements to begin creating a simple 2D representation.</li>
+        </ul>
+
+      </div>
+
+      <p>
+        After the 2D scanner works, the project can become more complex. A future
+        version could add movement in another direction or collect more detailed
+        measurements so that the system begins building a 3D representation instead
+        of only a flat 2D scan.
+      </p>
+
+      <p>
+        This is still much simpler than the museum scanner, but that is the point
+        of the minimum testable prototype. Each version gives me one more piece of
+        the final system and lets me understand the engineering before adding the
+        next layer of complexity.
+      </p>
+
+    </section>
+
+
+  </div>
+
+</main>
+
+</body>
+</html>

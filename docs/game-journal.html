@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Development — Innovator Journal</title>
+
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #181b21;
+      --text: #f3f4f6;
+      --muted: #a7adb8;
+      --accent: #6ea8fe;
+      --line: #303640;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.7;
+    }
+
+    main {
+      width: min(900px, 90%);
+      margin: auto;
+      padding: 40px 0 80px;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    nav {
+      margin-bottom: 35px;
+    }
+
+    header {
+      margin-bottom: 55px;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 7vw, 4.5rem);
+      line-height: 1.08;
+      margin: 10px 0 20px;
+    }
+
+    h2 {
+      font-size: 1.9rem;
+      line-height: 1.25;
+      margin: 0 0 18px;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      margin: 25px 0 12px;
+    }
+
+    p {
+      margin: 0 0 18px;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.15rem;
+      max-width: 750px;
+    }
+
+    .label {
+      color: var(--accent);
+      font-weight: bold;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+    }
+
+    .section {
+      margin-bottom: 55px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 26px;
+      margin: 25px 0;
+    }
+
+    .note {
+      background: var(--card);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 25px 0;
+    }
+
+    .timeline {
+      margin-left: 12px;
+      padding-left: 35px;
+      border-left: 3px solid var(--line);
+    }
+
+    .stage {
+      position: relative;
+      margin-bottom: 65px;
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      left: -46px;
+      top: 5px;
+      width: 19px;
+      height: 19px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 4px solid var(--bg);
+    }
+
+    figure {
+      margin: 25px 0;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    figcaption {
+      color: var(--muted);
+      margin-top: 10px;
+      font-size: 0.95rem;
+    }
+
+    code {
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.92em;
+    }
+
+    pre {
+      overflow-x: auto;
+      background: #090b0f;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 25px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    th,
+    td {
+      padding: 14px;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--card);
+    }
+
+    .goal {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 25px;
+      margin: 20px 0;
+    }
+
+    .goal h3 {
+      margin-top: 0;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding-top: 25px;
+      margin-top: 50px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 650px) {
+      main {
+        width: 92%;
+      }
+
+      .timeline {
+        margin-left: 8px;
+        padding-left: 23px;
+      }
+
+      .stage::before {
+        left: -34px;
+      }
+
+      .card,
+      .goal {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<main>
+
+  <nav>
+    <a href="index.html">← Back to my journal</a>
+  </nav>
+
+  <header>
+    <p class="label">Innovator Journal · Unit 3</p>
+    <h1>One Shot, Autopsy, Goals</h1>
+
+    <p class="subtitle">
+      My process using WebbGPT to create browser games,
+      troubleshoot a problem, and understand how the code works.
+    </p>
+
+    <p>Leo Fan · October 13, 2026</p>
+  </header>
+
+  <section class="section">
+    <h2>My starting point</h2>
+
+    <p>
+      I started by asking WebbGPT to make a playable game like
+      Google Snake. I wanted to see how an idea described in a
+      prompt could become a browser game.
+    </p>
+
+    <p>
+      The first result did not work when I tried to start it.
+      I reported the problem and asked WebbGPT to revise the game.
+      After that, I asked for a more complex Snake game, a tag game,
+      and a Geometry Dash-like game.
+    </p>
+
+    <div class="note">
+      <strong>My role:</strong>
+      WebbGPT generated the code. I requested the games, reported
+      the startup problem, and asked for changes. For this autopsy,
+      I am focusing on the repaired Snake file,
+      <code>snake-game-fixed.html</code>.
+    </div>
+  </section>
+
+  <div class="timeline">
+
+    <section class="stage">
+      <p class="label">Stage 1 · First prompt</p>
+      <h2>The first Snake game did not start</h2>
+
+      <p>
+        My first request was:
+        “Can you make a playable game that is like the snake game
+        on Google?”
+      </p>
+
+      <p>
+        The page displayed the score and instructions, but the
+        board was blank. There was no visible snake or apple.
+        This was the problem that led me to ask for a revision.
+      </p>
+
+      <figure>
+        <img
+          src="snake-first.png"
+          alt="First Snake version showing a blank green board and zero scores"
+          loading="lazy">
+        <figcaption>
+          Screenshot 1: The result after my first prompt.
+          The interface appeared, but the game board was blank.
+        </figcaption>
+      </figure>
+
+      <p>
+        This showed me that receiving generated code does not
+        automatically mean the result works. Trying the game
+        revealed a problem that the original response did not.
+      </p>
+    </section>
+
+    <section class="stage">
+      <p class="label">Stage 2 · Revision</p>
+      <h2>Asking WebbGPT to make it work</h2>
+
+      <p>
+        I told WebbGPT, “the game isnt working when i try to start it.”
+        It supplied a revised version and explained changes to
+        storage access, starting the game, and managing the game loop.
+      </p>
+
+      <ul>
+        <li>
+          It wrapped <code>localStorage</code> access in
+          <code>try/catch</code> so blocked storage would not stop
+          the script.
+        </li>
+        <li>
+          It added click-to-start and a keyboard listener on
+          <code>window</code>.
+        </li>
+        <li>
+          It tracked and canceled animation frames to prevent
+          duplicate loops during pause and resume.
+        </li>
+      </ul>
+
+      <figure>
+        <img
+          src="snake-revised.png"
+          alt="Revised Snake start screen with a checkerboard, blue snake, red apple, and start instructions"
+          loading="lazy">
+        <figcaption>
+          Screenshot 2: After the revision, the board, snake,
+          apple, and start instructions were visible.
+        </figcaption>
+      </figure>
+
+      <p>
+        The screenshot shows a visible improvement from the blank
+        first version. WebbGPT proposed the causes of the failure;
+        my original report did not establish which cause affected
+        my computer.
+      </p>
+    </section>
+
+    <section class="stage">
+      <p class="label">Stage 3 · More complexity</p>
+      <h2>Snake Deluxe</h2>
+
+      <p>
+        Next, I asked WebbGPT to make the game more complex.
+        The new version introduced Easy, Normal, and Hard modes,
+        levels, stone obstacles, golden apples, and a slow-motion berry.
+      </p>
+
+      <figure>
+        <img
+          src="snake-deluxe.png"
+          alt="Snake Deluxe menu with three difficulty buttons and rules for bonus items and levels"
+          loading="lazy">
+        <figcaption>
+          Screenshot 3: Snake Deluxe added difficulty choices
+          and more rules to the original Snake idea.
+        </figcaption>
+      </figure>
+
+      <p>
+        The added features gave the player more decisions to make.
+        They also introduced more things to track and test, such
+        as item timers, level changes, and obstacle collisions.
+        Asking for “more complex” produced features, but my next
+        improvement should have a specific purpose that I can evaluate.
+      </p>
+    </section>
+
+    <section class="stage">
+      <p class="label">Stage 4 · A different game</p>
+      <h2>Tag!</h2>
+
+      <p>
+        I then asked WebbGPT to make a tag game. Its menu offered
+        a computer opponent or two players on one keyboard.
+        The objective was to spend less time as IT during a
+        60-second round.
+      </p>
+
+      <figure>
+        <img
+          src="tag-game.png"
+          alt="Tag game menu with computer and two-player modes, a sixty-second timer, and player controls"
+          loading="lazy">
+        <figcaption>
+          Screenshot 4: The Tag menu explains the two modes,
+          controls, speed boosts, and time-based objective.
+        </figcaption>
+      </figure>
+
+      <p>
+        Compared with Snake, this game needs to track two players,
+        which one is IT, and how long each player has held that role.
+        It helped me see how changing the game idea changes the
+        information the program needs to remember.
+      </p>
+    </section>
+
+    <section class="stage">
+      <p class="label">Stage 5 · Another direction</p>
+      <h2>Cube Dash</h2>
+
+      <p>
+        Finally, I asked for a Geometry Dash-like game.
+        WebbGPT created Cube Dash, with an automatically moving
+        cube, jumping, spikes, attempts, and percentage progress.
+      </p>
+
+      <figure>
+        <img
+          src="cube-dash.png"
+          alt="Cube Dash start screen with a cube, a spike, an attempt counter, and zero-percent progress"
+          loading="lazy">
+        <figcaption>
+          Screenshot 5: Cube Dash focuses on jumping and avoiding
+          obstacles instead of steering around a grid.
+        </figcaption>
+      </figure>
+
+      <p>
+        This introduced a different movement idea: gravity and
+        jump velocity. The result expanded the kinds of games
+        I had requested, but understanding one smaller game first
+        gives me a manageable starting point for editing code.
+      </p>
+    </section>
+
+  </div>
+
+  <section class="section">
+    <p class="label">Outcome</p>
+    <h2>What my process produced</h2>
+
+    <p>
+      My requests produced several browser-game prototypes,
+      including an original and repaired Snake game, Snake Deluxe,
+      Tag, and Cube Dash. The screenshots document the blank first
+      version and the later start screens. They do not by themselves
+      prove that every gameplay feature works.
+    </p>
+
+    <p>
+      The most useful part of this process was the transition
+      from receiving a game to reporting a problem and requesting
+      a revision. My next step is to make my testing and requests
+      more specific.
+    </p>
+  </section>
+
+  <section class="section">
+    <p class="label">Code autopsy · Repaired Snake</p>
+    <h2>1. The canvas</h2>
+
+    <p>
+      Line 71 of the repaired Snake file places the canvas inside
+      the HTML body, below the score display and above the touch
+      controls:
+    </p>
+
+    <pre><code>&lt;canvas id="game" width="600" height="540"
+        tabindex="0"&gt;&lt;/canvas&gt;</code></pre>
+
+    <p>
+      The drawing area is <strong>600 pixels wide and 540 pixels
+      tall</strong>. Lines 82–84 get its drawing context and
+      define the grid:
+    </p>
+
+    <pre><code>const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const COLS = 20, ROWS = 18, CELL = 30;</code></pre>
+
+    <p>
+      There are 20 columns and 18 rows, with 30-pixel cells.
+      That matches the canvas because 20 × 30 = 600 and
+      18 × 30 = 540.
+    </p>
+
+    <p>
+      Changing only the canvas width or height would not change
+      the grid or its collision boundaries. A smaller canvas
+      could cut off the board, while a larger one could leave
+      unused space. To change the playable board, I would need
+      to keep the canvas, grid dimensions, and cell size consistent.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>2. The state variables</h2>
+
+    <p>
+      The main state variables are declared on lines 95–98
+      inside the function that wraps the script:
+    </p>
+
+    <pre><code>let snake, dir, apple, score, speed;
+let playing, gameOver, started, moveQueue;
+let best = Number(storage.get('snakeBest') || 0);
+let rafId = null;
+let lastTime = 0;</code></pre>
+
+    <p>
+      The first declaration is split across two lines here for
+      readability. These values are initialized in
+      <code>reset()</code> or elsewhere in the setup.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Variable</th>
+            <th>What it tracks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>snake</code></td>
+            <td>The grid positions of the head and body.</td>
+          </tr>
+          <tr>
+            <td><code>dir</code></td>
+            <td>The current movement direction.</td>
+          </tr>
+          <tr>
+            <td><code>moveQueue</code></td>
+            <td>Direction changes waiting for a movement step.</td>
+          </tr>
+          <tr>
+            <td><code>apple</code></td>
+            <td>The apple’s position.</td>
+          </tr>
+          <tr>
+            <td><code>score</code> and <code>best</code></td>
+            <td>The current score and saved best score.</td>
+          </tr>
+          <tr>
+            <td><code>speed</code></td>
+            <td>The delay between movement steps in milliseconds.</td>
+          </tr>
+          <tr>
+            <td>
+              <code>playing</code>,
+              <code>gameOver</code>,
+              <code>started</code>
+            </td>
+            <td>Whether the game is running, ended, or has begun.</td>
+          </tr>
+          <tr>
+            <td><code>rafId</code> and <code>lastTime</code></td>
+            <td>The scheduled animation frame and last movement time.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      One detail I noticed is that <code>speed</code> starts at
+      140, but a smaller value makes the snake faster. The value
+      represents waiting time, not distance traveled.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>3. The game loop</h2>
+
+    <p>
+      The repeating function is <code>loop(t)</code> on
+      lines 137–144:
+    </p>
+
+    <pre><code>function loop(t) {
+  rafId = requestAnimationFrame(loop);
+
+  if (!playing) {
+    stopLoop();
+    return;
+  }
+
+  if (t - lastTime >= speed) {
+    lastTime = t;
+    step();
+  }
+}</code></pre>
+
+    <p>
+      <code>requestAnimationFrame</code> asks the browser to run
+      the function around its next display refresh. The exact
+      rate depends on the browser and display; it is not a
+      guaranteed fixed number of calls per second.
+    </p>
+
+    <p>
+      The two main jobs are <strong>updating the game state</strong>
+      and <strong>drawing the result</strong>. In this version,
+      <code>loop()</code> checks the timer first.
+      <code>step()</code> updates movement and checks collisions,
+      then calls <code>draw()</code>.
+    </p>
+
+    <p>
+      This means the game does not move or redraw on every
+      animation callback. Initially, it waits at least 140
+      milliseconds between movement steps.
+    </p>
+
+    <p>
+      The check <code>if (rafId !== null) return;</code> in
+      <code>startLoop()</code> prevents starting another active
+      loop. <code>stopLoop()</code> cancels the scheduled frame.
+      This connects to the pause/resume issue WebbGPT described.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>4. Input handling</h2>
+
+    <p>
+      The keyboard listener begins on line 274:
+    </p>
+
+    <pre><code>window.addEventListener('keydown', e => {
+  // The handler maps arrow keys and WASD to directions.
+});</code></pre>
+
+    <p>
+      Arrow keys and WASD call <code>startGame()</code> and
+      <code>setDir(map[e.key])</code>. Pressing a direction key
+      does not immediately change the snake’s position.
+      It adds a direction to <code>moveQueue</code>.
+    </p>
+
+    <p>
+      During the movement step, the code takes a queued direction
+      and calculates the new head position:
+    </p>
+
+    <pre><code>if (moveQueue.length) dir = moveQueue.shift();
+
+const head = {
+  x: snake[0].x + dir.x,
+  y: snake[0].y + dir.y
+};</code></pre>
+
+    <p>
+      The comparison below prevents an immediate reversal:
+    </p>
+
+    <pre><code>if (nd.x === -last.x && nd.y === -last.y) return;</code></pre>
+
+    <p>
+      Space or Enter can pause and resume during a game.
+      After game over, either key resets the game to its ready
+      screen, and another start input begins movement.
+      Clicking the board can also start, pause, resume, or reset.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>5. Collision and game-over logic</h2>
+
+    <p>
+      Lines 166–167 compare the new head position with the
+      boundaries and existing snake segments:
+    </p>
+
+    <pre><code>if (
+  head.x &lt; 0 ||
+  head.x &gt;= COLS ||
+  head.y &lt; 0 ||
+  head.y &gt;= ROWS ||
+  snake.some(s => s.x === head.x && s.y === head.y)
+) {
+  playing = false;
+  gameOver = true;
+  stopLoop();
+  // The remaining code updates the score and draws the result.
+}</code></pre>
+
+    <p>
+      The first four comparisons check whether the head is
+      outside the grid. The final comparison checks whether
+      any snake segment occupies the same x and y position
+      as the new head.
+    </p>
+
+    <p>
+      When a collision occurs, the program stops movement,
+      sets <code>gameOver</code> to true, and draws the game-over
+      screen.
+    </p>
+
+    <p>
+      This version has no explicit win condition. Filling every
+      square is an edge case worth investigating because the
+      apple-placement function would run out of empty spaces.
+      I have not tested or fixed that case yet.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>6. Scoring</h2>
+
+    <p>
+      The score is stored in <code>score</code>, declared on
+      line 95 and reset to zero on line 104.
+      Lines 179–180 detect eating an apple and add a point:
+    </p>
+
+    <pre><code>if (head.x === apple.x && head.y === apple.y) {
+  score++;
+  updateScore();
+  if (speed > 70) speed -= 3;
+  placeApple();
+}</code></pre>
+
+    <p>
+      <strong><code>score++;</code> is the statement that changes
+      the score.</strong> <code>updateScore()</code> copies the
+      value into the HTML score display.
+    </p>
+
+    <p>
+      Eating also reduces the movement delay, making the snake
+      faster. The snake grows because the eating branch keeps
+      the tail, while a normal movement step removes it.
+    </p>
+
+    <p>
+      After a collision, the program compares the current score
+      with <code>best</code>. If the current score is higher,
+      it updates the best score and attempts to save it.
+    </p>
+  </section>
+
+  <section class="section">
+    <p class="label">Reflection</p>
+    <h2>What I learned</h2>
+
+    <p>
+      The game separates what it remembers from what it draws.
+      Input changes a direction queue. The movement step changes
+      positions and checks the rules. Drawing makes the current
+      state visible.
+    </p>
+
+    <p>
+      This gives me a way to investigate problems: check whether
+      an input was received, whether the state changed, and
+      whether the screen reflects that change.
+    </p>
+
+    <p>
+      I also learned that my feedback should be more specific.
+      Saying “it doesn’t work” helped begin a revision, but
+      recording the browser, the exact action, the visible
+      result, and any console error would provide better evidence.
+    </p>
+
+    <p>
+      My next step is to understand and intentionally change
+      one game, then document whether the change improves it.
+    </p>
+  </section>
+
+  <section class="section">
+    <p class="label">Planning and goal setting</p>
+    <h2>My goals for this week</h2>
+
+    <article class="goal">
+      <h3>Goal 1: Explain one complete movement cycle</h3>
+      <p><strong>Deadline: Wednesday, October 14</strong></p>
+
+      <p>
+        I will annotate the canvas, state variables, loop, input,
+        collision, and scoring sections in a copy of the Snake
+        source. Then I will explain how a right-arrow press
+        reaches the direction queue, changes the head position,
+        and appears on screen.
+      </p>
+
+      <p>
+        <strong>Evidence:</strong> An annotated code screenshot
+        and a short explanation connecting these steps.
+      </p>
+
+      <p>
+        <strong>Why this matters:</strong> I requested several
+        games, but I need to be able to explain one of them.
+        If I get stuck, I will ask WebbGPT about one function
+        at a time and compare its answer with the code.
+      </p>
+    </article>
+
+    <article class="goal">
+      <h3>Goal 2: Test startup, pause, and reset</h3>
+      <p><strong>Deadline: Thursday, October 15</strong></p>
+
+      <p>
+        I will test click-to-start, arrow-key start, five
+        pause/resume cycles, wall collision, and resetting
+        followed by starting again.
+      </p>
+
+      <p>
+        <strong>Evidence:</strong> A test log with my browser
+        version, expected result, actual result, and pass/fail
+        status. If an error occurs, I will record the console
+        message and the steps that produced it.
+      </p>
+
+      <p>
+        <strong>Why this matters:</strong> The first version
+        failed to start, and WebbGPT described a duplicate-loop
+        problem. If a test fails, I will investigate that failure
+        before requesting more features.
+      </p>
+    </article>
+
+    <article class="goal">
+      <h3>Goal 3: Make one controlled difficulty change</h3>
+      <p><strong>Deadline: Friday, October 16</strong></p>
+
+      <p>
+        In a separate copy, I will compare the original
+        140-millisecond starting delay with a 180-millisecond
+        delay. I will play three rounds of each, record my
+        scores and how controllable each feels, and choose
+        a setting with a reason.
+      </p>
+
+      <p>
+        <strong>Evidence:</strong> A six-round comparison table,
+        the changed line of code, and a short conclusion.
+      </p>
+
+      <p>
+        <strong>Why this matters:</strong> My earlier request
+        for “more complex” did not define what improvement
+        should look like. Changing one value gives me something
+        specific to evaluate. If time is short, I will finish
+        this experiment before adding another feature.
+      </p>
+    </article>
+
+    <div class="note">
+      By the end of the week, I want an annotated source file,
+      a test log, and a comparison of two speed settings.
+      These will show progress in understanding and improving
+      the game, beyond generating more versions.
+    </div>
+  </section>
+
+  <footer>
+    <p>Leo Fan · Innovator Journal · Unit 3</p>
+    <a href="index.html">← Back to my journal</a>
+  </footer>
+
+  <a class="button" href="game-journal.html">
+  Game Development: Autopsy &amp; Goals
+</a>
+
+</main>
+</body>
+</html>

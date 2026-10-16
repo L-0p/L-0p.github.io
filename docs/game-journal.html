@@ -246,65 +246,7 @@
 
    
   </header>
-<section class="section" id="development-reflection">
-  <p class="label">Development reflection · October 15, 2026</p>
-  <h2>How I used AI to develop and improve my games</h2>
-  <p>My process changed from asking WebbGPT to generate games to using the results, noticing specific problems, and directing revisions. The strongest example is Tag: the record includes the original game and six revisions. Each version addressed a different concern, including reaction time, map design, getting stuck against walls, and hesitation around corners.</p>
-  <div class="note"><strong>How to read this record:</strong> This reflection uses my earlier screenshots and the new <em>Browser Game Development Chat: Chat Record + Complete Source Code</em> PDF. Pages 2–3 summarize my requests; the appendix contains 12 distinct HTML files. The PDF is an organized summary, not a verbatim transcript, so the requests below are paraphrased. WebbGPT wrote the game code and proposed the technical fixes. I chose the direction, tried the results, reported problems, and asked for changes and explanations. AI also helped organize this journal; it is not a claim that I independently wrote every algorithm.</div>
 
-  <h3>From a broad request to specific feedback</h3>
-  <p>I began with a request for a game like Google Snake. When the first version did not start, I reported that failure. The first two screenshots below show the difference between the blank board and the revised start screen. WebbGPT guarded storage calls, added click-to-start, and changed animation-loop management. Those changes addressed possible causes; I did not supply browser logs proving which one caused the original failure.</p>
-  <p>I then requested more complexity, which became Snake Deluxe, followed by Tag and a Geometry Dash-inspired Cube Dash. Later I requested a polished Ball Blast-inspired game with a cannon, splitting balls, coins, upgrades, and waves. These requests explored different game ideas, but the repeated Tag revisions became my clearest example of improving software through feedback.</p>
-
-  <div class="table-wrap"><table>
-    <thead><tr><th>Version and my direction</th><th>What WebbGPT changed</th><th>What the iteration revealed</th></tr></thead>
-    <tbody>
-      <tr><td><strong>Tag v1:</strong> I requested a tag game.</td><td>Computer and two-player modes, 60-second rounds, role swaps, speed boosts, and a no-tag-back grace period.</td><td>This provided the basic game that I could react to and refine.</td></tr>
-      <tr><td><strong>v2:</strong> I asked for a human-like reaction delay and an explanation of the new code.</td><td>A randomized 450–900 ms delay, a confused indicator, and slow stumbling behavior.</td><td>I was directing how the opponent should feel, not just asking for another game.</td></tr>
-      <tr><td><strong>v3:</strong> I asked for multiple maps and better graphics.</td><td>Four themed arenas, previews, shaded players, trails, glowing effects, and styled walls.</td><td>More attractive maps still needed testing for movement and accessibility.</td></tr>
-      <tr><td><strong>v4:</strong> I reported that the Maze could not be crossed and asked to see the code.</td><td>Alternating walls attached to the top and bottom, with connecting gaps.</td><td>The layout itself could prevent progress, regardless of how the player or opponent moved.</td></tr>
-      <tr><td><strong>v5:</strong> I reported that the computer got stuck against walls.</td><td>Short-range directional probes and timed escape behavior.</td><td>Local avoidance could help nearby movement but still struggle with a route around larger obstacles.</td></tr>
-      <tr><td><strong>v6:</strong> I requested better maneuvering around boxes.</td><td>A safe-position grid, breadth-first search, route smoothing, and corner clearance. The opponent paused during its reaction delay.</td><td>The solution changed from reacting to nearby walls to planning a connected route.</td></tr>
-      <tr><td><strong>v7:</strong> I reported hesitation lasting about 5–10 seconds.</td><td>Safe points near corners, distance-weighted Dijkstra searches, consistent waypoint thresholds, and route updates every 150 ms.</td><td>Finding a route was not enough: following it promptly and recognizing arrival also mattered.</td></tr>
-    </tbody>
-  </table></div>
-
-  <p>My later feedback was more useful than my original broad requests. Reporting that the Maze could not be crossed pointed toward the layout. Reporting that the computer stuck to walls pointed toward navigation. Reporting 5–10-second hesitation gave a concrete symptom to investigate. I did not have to know the algorithm’s name to describe what was wrong, but asking to see and explain the code helped connect each change to the behavior.</p>
-  <p>I also encountered a delivery problem when an attachment would not load. WebbGPT supplied fresh HTML and ZIP copies of Tag v7. Those were new download copies of the same code, not additional gameplay improvements. That taught me to separate a problem opening a file from a problem inside the game.</p>
-
-  <h3>Where my coding understanding deepened</h3>
-  <p><strong>Structure, appearance, and behavior have different jobs.</strong> HTML provides elements such as the canvas and score display, CSS controls their appearance, and JavaScript changes the state and draws the game. The Snake autopsy below shows the basic chain: a key press queues a direction, a movement step changes the head position, a comparison checks a collision, and drawing shows the result.</p>
-  <p><strong>Time values control different kinds of behavior.</strong> The Tag reaction delay is intentional: it makes the opponent wait after being tagged. Getting stuck for several seconds at a corner is a separate problem. In v7, <code>REPLAN_INTERVAL = 0.15</code> means the route can be reconsidered every 150 ms; it does not mean that the whole game only draws every 150 ms. Learning to distinguish these timers helps me ask for the right change.</p>
-  <p><strong>Collision detection and navigation are separate problems.</strong> Collision logic can stop a player from moving through a wall without telling the player how to go around it. The later Tag versions need both safe positions and safe connections between them. The player’s radius matters because a route that clears a wall for a single point may still scrape it for a circular character.</p>
-  <p><strong>The way a map is represented changes how a route is found.</strong> In v6, the map is represented by a grid of safe positions connected by equal-length steps. Breadth-first search explores those connections. In v7, the important positions are near obstacle corners, and their connections can have different lengths. The code assigns each connection its actual distance:</p>
-  <pre><code>const cost = Math.hypot(
-  navNodes[i].x - navNodes[j].x,
-  navNodes[i].y - navNodes[j].y
-);</code></pre>
-  <p>This is the calculation in <code>buildNavigation()</code> in Tag v7, reformatted for readability. The search then compares total travel distance rather than just counting connections. I can explain the reason for that change at a conceptual level; I still need practice implementing these algorithms independently.</p>
-  <p><strong>Small comparisons can cause visible problems.</strong> In v7, <code>aiInput()</code> removes a waypoint when the player is within 0.5 pixels:</p>
-  <pre><code>while (aiPath.length &amp;&amp;
-  Math.hypot(aiPath[0].x - p2.x, aiPath[0].y - p2.y) &lt; 0.5) {
-  aiPath.shift();
-}</code></pre>
-  <p>The source explains that arrival thresholds must agree so the opponent does not stop near a waypoint without removing it. This deepened my understanding of debugging: a noticeable delay can come from the relationship between two checks, not simply from a movement-speed value.</p>
-
-  <h3>What the outcome does and does not prove</h3>
-  <p>The result is a collection of prototypes and a documented sequence of Tag revisions. The chat record reports 80 simulated chase scenarios passing for v7. That is a reported AI test result, not 80 tests that I personally performed, and it does not establish that every live-play situation is bug-free. My reported problems provide evidence of interacting with the results; the source files provide evidence of what changed. The five earlier screenshots show the original games and menus, not the later Tag navigation revisions.</p>
-  <p>AI helped me get prototypes and revisions quickly, but I still had to judge whether the behavior matched my intention. A more elaborate response or more code was not automatically a successful outcome. The progress came from connecting a specific observation to a specific change and then checking the result again.</p>
-
-  <h3>How I would approach software development next time</h3>
-  <ol>
-    <li><strong>Define success before adding features.</strong> I would begin with one arena and a small set of checks: start a round, move both players, tag and swap roles, finish the timer, and restart. I would make sure those work before adding more maps or visual effects.</li>
-    <li><strong>Keep a version and test log.</strong> For each change, I would record the prompt, file version, expected behavior, actual behavior, and a screenshot or short recording. That would let me compare versions and return to an earlier one if a revision introduced a problem.</li>
-    <li><strong>Describe a reproducible problem.</strong> Instead of only saying the AI is bad, I would identify the map, player roles, positions, obstacle, and how long the problem lasts. I would ask for one focused change and an explanation of the relevant function.</li>
-    <li><strong>Retest old behavior after a fix.</strong> After changing navigation, I would check both chasing and fleeing on every map, including corners, narrow gaps, and role swaps. I would also check that the intended reaction delay remains. Fixing one scenario should not silently break another.</li>
-    <li><strong>Use AI explanations to build independence.</strong> I would predict what a small code change should do, make or request that change, and compare the result with my prediction. I would keep AI-reported tests separate from my own observations.</li>
-  </ol>
-  <p>A more useful future prompt would be: “On the Maze map, the computer stops at a corner while chasing me. Keep the intended reaction delay, but check whether the waypoint arrival condition prevents it from continuing. Explain the change and test chasing and fleeing around the same obstacle.” This is a proposed future prompt, not a quotation from my earlier chat.</p>
-  <p>My main takeaway is that software development is an ongoing cycle of defining behavior, trying a result, observing a problem, and revising it. I want to use AI to support that cycle while becoming more capable of explaining and testing the code myself.</p>
-  <p class="subtitle">Evidence: supplied full-code PDF, conversation summary on pages 2–3 and embedded Tag v2–v7 source files. The October 13 entry and goals below remain as the earlier record; this update does not claim those goals have all been completed.</p>
-</section>
 
 
   <section class="section">
@@ -918,6 +860,66 @@ const head = {
       the game.
     </div>
   </section>
+
+<section class="section" id="development-reflection" style="border-top:3px solid var(--accent);padding-top:45px;margin-top:65px">
+  <p class="label">Development reflection · October 15, 2026</p>
+  <h2>Assignment 2: Game Development Process and Reflection</h2>
+  <p>My process changed from asking WebbGPT to generate games to using the results, noticing specific problems, and directing revisions. The strongest example is Tag: the record includes the original game and six revisions. Each version addressed a different concern, including reaction time, map design, getting stuck against walls, and hesitation around corners.</p>
+  <div class="note"><strong>How to read this record:</strong> This reflection uses my earlier screenshots and the new <em>Browser Game Development Chat: Chat Record + Complete Source Code</em> PDF. Pages 2–3 summarize my requests; the appendix contains 12 distinct HTML files. The PDF is an organized summary, not a verbatim transcript, so the requests below are paraphrased. WebbGPT wrote the game code and proposed the technical fixes. I chose the direction, tried the results, reported problems, and asked for changes and explanations. AI also helped organize this journal; it is not a claim that I independently wrote every algorithm.</div>
+
+  <h3>From a broad request to specific feedback</h3>
+  <p>I began with a request for a game like Google Snake. When the first version did not start, I reported that failure. The first two screenshots below show the difference between the blank board and the revised start screen. WebbGPT guarded storage calls, added click-to-start, and changed animation-loop management. Those changes addressed possible causes; I did not supply browser logs proving which one caused the original failure.</p>
+  <p>I then requested more complexity, which became Snake Deluxe, followed by Tag and a Geometry Dash-inspired Cube Dash. Later I requested a polished Ball Blast-inspired game with a cannon, splitting balls, coins, upgrades, and waves. These requests explored different game ideas, but the repeated Tag revisions became my clearest example of improving software through feedback.</p>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>Version and my direction</th><th>What WebbGPT changed</th><th>What the iteration revealed</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Tag v1:</strong> I requested a tag game.</td><td>Computer and two-player modes, 60-second rounds, role swaps, speed boosts, and a no-tag-back grace period.</td><td>This provided the basic game that I could react to and refine.</td></tr>
+      <tr><td><strong>v2:</strong> I asked for a human-like reaction delay and an explanation of the new code.</td><td>A randomized 450–900 ms delay, a confused indicator, and slow stumbling behavior.</td><td>I was directing how the opponent should feel, not just asking for another game.</td></tr>
+      <tr><td><strong>v3:</strong> I asked for multiple maps and better graphics.</td><td>Four themed arenas, previews, shaded players, trails, glowing effects, and styled walls.</td><td>More attractive maps still needed testing for movement and accessibility.</td></tr>
+      <tr><td><strong>v4:</strong> I reported that the Maze could not be crossed and asked to see the code.</td><td>Alternating walls attached to the top and bottom, with connecting gaps.</td><td>The layout itself could prevent progress, regardless of how the player or opponent moved.</td></tr>
+      <tr><td><strong>v5:</strong> I reported that the computer got stuck against walls.</td><td>Short-range directional probes and timed escape behavior.</td><td>Local avoidance could help nearby movement but still struggle with a route around larger obstacles.</td></tr>
+      <tr><td><strong>v6:</strong> I requested better maneuvering around boxes.</td><td>A safe-position grid, breadth-first search, route smoothing, and corner clearance. The opponent paused during its reaction delay.</td><td>The solution changed from reacting to nearby walls to planning a connected route.</td></tr>
+      <tr><td><strong>v7:</strong> I reported hesitation lasting about 5–10 seconds.</td><td>Safe points near corners, distance-weighted Dijkstra searches, consistent waypoint thresholds, and route updates every 150 ms.</td><td>Finding a route was not enough: following it promptly and recognizing arrival also mattered.</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>My later feedback was more useful than my original broad requests. Reporting that the Maze could not be crossed pointed toward the layout. Reporting that the computer stuck to walls pointed toward navigation. Reporting 5–10-second hesitation gave a concrete symptom to investigate. I did not have to know the algorithm’s name to describe what was wrong, but asking to see and explain the code helped connect each change to the behavior.</p>
+  <p>I also encountered a delivery problem when an attachment would not load. WebbGPT supplied fresh HTML and ZIP copies of Tag v7. Those were new download copies of the same code, not additional gameplay improvements. That taught me to separate a problem opening a file from a problem inside the game.</p>
+
+  <h3>Where my coding understanding deepened</h3>
+  <p><strong>Structure, appearance, and behavior have different jobs.</strong> HTML provides elements such as the canvas and score display, CSS controls their appearance, and JavaScript changes the state and draws the game. The Snake autopsy below shows the basic chain: a key press queues a direction, a movement step changes the head position, a comparison checks a collision, and drawing shows the result.</p>
+  <p><strong>Time values control different kinds of behavior.</strong> The Tag reaction delay is intentional: it makes the opponent wait after being tagged. Getting stuck for several seconds at a corner is a separate problem. In v7, <code>REPLAN_INTERVAL = 0.15</code> means the route can be reconsidered every 150 ms; it does not mean that the whole game only draws every 150 ms. Learning to distinguish these timers helps me ask for the right change.</p>
+  <p><strong>Collision detection and navigation are separate problems.</strong> Collision logic can stop a player from moving through a wall without telling the player how to go around it. The later Tag versions need both safe positions and safe connections between them. The player’s radius matters because a route that clears a wall for a single point may still scrape it for a circular character.</p>
+  <p><strong>The way a map is represented changes how a route is found.</strong> In v6, the map is represented by a grid of safe positions connected by equal-length steps. Breadth-first search explores those connections. In v7, the important positions are near obstacle corners, and their connections can have different lengths. The code assigns each connection its actual distance:</p>
+  <pre><code>const cost = Math.hypot(
+  navNodes[i].x - navNodes[j].x,
+  navNodes[i].y - navNodes[j].y
+);</code></pre>
+  <p>This is the calculation in <code>buildNavigation()</code> in Tag v7, reformatted for readability. The search then compares total travel distance rather than just counting connections. I can explain the reason for that change at a conceptual level; I still need practice implementing these algorithms independently.</p>
+  <p><strong>Small comparisons can cause visible problems.</strong> In v7, <code>aiInput()</code> removes a waypoint when the player is within 0.5 pixels:</p>
+  <pre><code>while (aiPath.length &amp;&amp;
+  Math.hypot(aiPath[0].x - p2.x, aiPath[0].y - p2.y) &lt; 0.5) {
+  aiPath.shift();
+}</code></pre>
+  <p>The source explains that arrival thresholds must agree so the opponent does not stop near a waypoint without removing it. This deepened my understanding of debugging: a noticeable delay can come from the relationship between two checks, not simply from a movement-speed value.</p>
+
+  <h3>What the outcome does and does not prove</h3>
+  <p>The result is a collection of prototypes and a documented sequence of Tag revisions. The chat record reports 80 simulated chase scenarios passing for v7. That is a reported AI test result, not 80 tests that I personally performed, and it does not establish that every live-play situation is bug-free. My reported problems provide evidence of interacting with the results; the source files provide evidence of what changed. The five earlier screenshots show the original games and menus, not the later Tag navigation revisions.</p>
+  <p>AI helped me get prototypes and revisions quickly, but I still had to judge whether the behavior matched my intention. A more elaborate response or more code was not automatically a successful outcome. The progress came from connecting a specific observation to a specific change and then checking the result again.</p>
+
+  <h3>How I would approach software development next time</h3>
+  <ol>
+    <li><strong>Define success before adding features.</strong> I would begin with one arena and a small set of checks: start a round, move both players, tag and swap roles, finish the timer, and restart. I would make sure those work before adding more maps or visual effects.</li>
+    <li><strong>Keep a version and test log.</strong> For each change, I would record the prompt, file version, expected behavior, actual behavior, and a screenshot or short recording. That would let me compare versions and return to an earlier one if a revision introduced a problem.</li>
+    <li><strong>Describe a reproducible problem.</strong> Instead of only saying the AI is bad, I would identify the map, player roles, positions, obstacle, and how long the problem lasts. I would ask for one focused change and an explanation of the relevant function.</li>
+    <li><strong>Retest old behavior after a fix.</strong> After changing navigation, I would check both chasing and fleeing on every map, including corners, narrow gaps, and role swaps. I would also check that the intended reaction delay remains. Fixing one scenario should not silently break another.</li>
+    <li><strong>Use AI explanations to build independence.</strong> I would predict what a small code change should do, make or request that change, and compare the result with my prediction. I would keep AI-reported tests separate from my own observations.</li>
+  </ol>
+  <p>A more useful future prompt would be: “On the Maze map, the computer stops at a corner while chasing me. Keep the intended reaction delay, but check whether the waypoint arrival condition prevents it from continuing. Explain the change and test chasing and fleeing around the same obstacle.” This is a proposed future prompt, not a quotation from my earlier chat.</p>
+  <p>My main takeaway is that software development is an ongoing cycle of defining behavior, trying a result, observing a problem, and revising it. I want to use AI to support that cycle while becoming more capable of explaining and testing the code myself.</p>
+  <p class="subtitle">Evidence: supplied full-code PDF, conversation summary on pages 2–3 and embedded Tag v2–v7 source files. The October 13 entry and goals above remain as the earlier record; this update does not claim those goals have all been completed.</p>
+</section>
 
   <footer>
     <p>Leo Fan · Innovator Journal · Unit 3</p>

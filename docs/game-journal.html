@@ -921,6 +921,62 @@ const head = {
   
 </section>
 
+
+<section class="section" id="joystick-project" style="border-top:3px solid var(--accent);padding-top:45px;margin-top:65px">
+  <p class="label">Assignment 3 · October 27, 2026</p>
+  <h2>Video Game Controller Project: Connecting a Joystick to Tag</h2>
+  <h3>My goal and how I used AI</h3>
+  <p>My goal was to control Player 1 in my Tag game with a physical joystick connected to an Arduino. This would extend my earlier game project by connecting a physical input device to the browser game.</p>
+  <p>I used WebbGPT to write the Arduino code and modify the game. I first asked for a program that would display the joystick’s X and Y readings in the Serial Monitor. Later, I asked it to use those readings to control the Tag player. WebbGPT added a Connect Joystick button and code for receiving data from the Arduino over USB.</p>
+  <div class="note">WebbGPT wrote the code and suggested troubleshooting steps. My role was to choose what I wanted the controller to do, try the supplied code, and report the problems I encountered. AI also helped organize this journal entry.</div>
+  <h3>My process and the problems I encountered</h3>
+  <div class="card">
+    <h3>Using code intended for the wrong device</h3>
+    <p>One problem happened after I asked for C++ code. WebbGPT supplied desktop versions as well as the Arduino code, and I put the Windows desktop version into the Arduino IDE. This produced the error:</p>
+    <pre><code>windows.h: No such file</code></pre>
+    <p>When I shared the error with AI, it explained that the Windows version was meant to run on a Windows computer, while the Arduino needed the Arduino sketch.</p>
+    <p>This helped me understand that identifying a programming language is not enough to know where a program will work. Two programs can both use C++ but depend on different libraries and hardware. In future prompts, I should specify that I need code to upload to an Arduino, rather than asking only for “C++.”</p>
+  </div>
+  <div class="card">
+    <h3>Encountering a missing brace</h3>
+    <p>Another error was:</p>
+    <pre><code>expected } at end of input</code></pre>
+    <p>The chat identified a missing closing brace at the end of <code>loop()</code>. WebbGPT supplied another copy with braces on separate lines and suggested using Auto Format to check their structure.</p>
+    <p>I learned that braces define where a block of code starts and ends. Losing one while copying code can prevent the whole program from compiling. This also showed me why formatting matters: indentation makes the structure easier to inspect when something goes wrong.</p>
+    <p>The later screenshot in my chat showed a successful compile. However, compiling successfully did not prove that the program had been uploaded or that the joystick could control the game.</p>
+  </div>
+  <div class="card">
+    <h3>The joystick still did not move the player</h3>
+    <p>After the game was modified for joystick input, I reported that moving the joystick did not move the character.</p>
+    <p>WebbGPT responded with a diagnostic version of the game that displayed incoming joystick readings and the values used by the game. It also suggested checking the browser, closing the Serial Monitor, and confirming the correct Arduino sketch and communication speed.</p>
+    <p>I did not complete those diagnostic checks, so I cannot identify the cause of the connection problem. My outcome was an unfinished controller integration, with code and a diagnostic tool available but no confirmed joystick-controlled gameplay.</p>
+  </div>
+  <h3>What I learned about troubleshooting</h3>
+  <p>This project helped me distinguish between several different signs of progress:</p>
+  <ul>
+    <li><strong>Compiling:</strong> The code passes the compiler’s checks.</li>
+    <li><strong>Uploading:</strong> The program is transferred to the Arduino.</li>
+    <li><strong>Receiving data:</strong> The browser receives readings from the Arduino.</li>
+    <li><strong>Controlling the game:</strong> The game uses those readings to move the character.</li>
+  </ul>
+  <p>Success at one stage does not automatically prove that the next stage works.</p>
+  <p>My original report—“the joystick does not move the character”—described the visible problem, but it did not show where the process stopped. A more useful next question would be: <strong>Does the browser receive changing X and Y values when I move the joystick?</strong></p>
+  <p>If no values arrive, I would investigate uploading and the connection. If values arrive but do not change, I would investigate the joystick readings and wiring. If the values change but the character does not move, I would investigate how the game handles those values.</p>
+  <p>These are my planned next steps, not tests I have already completed.</p>
+  <h3>How I would approach a future project</h3>
+  <p>Next time, I would test the project in smaller stages before connecting everything. I would first confirm that the Arduino reads the joystick, then confirm that the browser receives the readings, and finally test movement in the game.</p>
+  <p>I would also keep a troubleshooting log with the exact error, my explanation of what might be wrong, the AI suggestion I tried, and the result. This would make my own decisions clearer and help me avoid changing several things without knowing which change mattered.</p>
+  <div class="goal">
+    <h3>My next goals</h3>
+    <ol>
+      <li>Confirm that the correct Arduino sketch uploads successfully and save evidence of the result.</li>
+      <li>Record the diagnostic readings with the joystick centered and moved in each direction.</li>
+      <li>Use those observations to choose one focused troubleshooting step, then repeat the same test.</li>
+    </ol>
+  </div>
+  <p>The project did not reach working joystick control, but it gave me a clearer understanding of the difference between generating code and verifying a complete system. In future projects, I want to use AI not only to produce code, but also to help me design tests whose results I can observe and explain myself.</p>
+</section>
+
   <footer>
     <p>Leo Fan · Innovator Journal · Unit 3</p>
     <a href="index.html">← Back to my journal</a>

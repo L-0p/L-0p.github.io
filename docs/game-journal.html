@@ -935,14 +935,14 @@ const head = {
     <p>One problem happened after I asked for C++ code. WebbGPT supplied desktop versions as well as the Arduino code, and I put the Windows desktop version into the Arduino IDE. This produced the error:</p>
     <pre><code>windows.h: No such file</code></pre>
     <p>When I shared the error with AI, it explained that the Windows version was meant to run on a Windows computer, while the Arduino needed the Arduino sketch.</p>
-    <p>This helped me understand that identifying a programming language is not enough to know where a program will work. Two programs can both use C++ but depend on different libraries and hardware. In future prompts, I should specify that I need code to upload to an Arduino, rather than asking only for “C++.”</p>
+    <p>This helped me understand that identifying a programming language is not enough to know where a program will work. In future prompts, I should specify that I need code to upload to an Arduino, rather than asking only for “C++.”</p>
   </div>
   <div class="card">
     <h3>Encountering a missing brace</h3>
     <p>Another error was:</p>
     <pre><code>expected } at end of input</code></pre>
     <p>The chat identified a missing closing brace at the end of <code>loop()</code>. WebbGPT supplied another copy with braces on separate lines and suggested using Auto Format to check their structure.</p>
-    <p>I learned that braces define where a block of code starts and ends. Losing one while copying code can prevent the whole program from compiling. This also showed me why formatting matters: indentation makes the structure easier to inspect when something goes wrong.</p>
+    <p>I learned that braces define where a block of code starts and ends. Losing one while copying code can prevent the whole program from compiling. This also showed me why formatting matters, as indentation makes the structure easier to inspect when something goes wrong.</p>
     <p>The later screenshot in my chat showed a successful compile. However, compiling successfully did not prove that the program had been uploaded or that the joystick could control the game.</p>
   </div>
   <div class="card">
@@ -968,10 +968,12 @@ const head = {
   <p>I would also keep a troubleshooting log with the exact error, my explanation of what might be wrong, the AI suggestion I tried, and the result. This would make my own decisions clearer and help me avoid changing several things without knowing which change mattered.</p>
   <div class="goal">
     <h3>My next goals</h3>
-    <ol>
-      <li>Confirm that the correct Arduino sketch uploads successfully and save evidence of the result.</li>
-      <li>Record the diagnostic readings with the joystick centered and moved in each direction.</li>
-      <li>Use those observations to choose one focused troubleshooting step, then repeat the same test.</li>
+<ol>
+  <li>Check that the physical wiring between the joystick, breadboard, and Arduino is correct.</li>
+  <li>Confirm that the correct Arduino sketch uploads successfully and save evidence of the result.</li>
+  <li>Record the diagnostic readings with the joystick centered and moved in each direction.</li>
+  <li>Use those observations to choose one focused troubleshooting step, then repeat the same test.</li>
+</ol>
     </ol>
   </div>
   <p>The project did not reach working joystick control, but it gave me a clearer understanding of the difference between generating code and verifying a complete system. In future projects, I want to use AI not only to produce code, but also to help me design tests whose results I can observe and explain myself.</p>
